@@ -9,7 +9,16 @@ const rl = createInterface({
 // TODO: Uncomment the code below to pass the first stage
 rl.prompt();
 rl.on("line", (command: string) => {
-  if (command === "exit") return rl.close();
-  console.log(`${command}: command not found`);
+  switch (command.trim().split(" ")[0]) {
+    case "exit":
+      return rl.close();
+    case "echo":
+      const removeEcho = command.split(" ");
+      removeEcho.shift();
+      console.log(removeEcho.join(" "));
+      break;
+    default:
+      console.log(`${command}: command not found`);
+  }
   rl.prompt();
 });
