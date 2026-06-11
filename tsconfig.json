@@ -13,7 +13,6 @@
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "noEmit": true,
-    "types": ["node"],
 
     // Best practices
     "strict": true,
