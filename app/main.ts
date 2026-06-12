@@ -20,6 +20,11 @@ rl.on("line", (command: string) => {
     case "type":
       const removeType = command.split(" ");
       removeType.shift();
+      if (removeType.join(" ") !== "exit" || "echo" || " type") {
+        console.log(`${removeType.join(" ")}: not found`);
+        break;
+      }
+
       console.log(`${removeType.join(" ")} is a shell builtin`);
       break;
     default:
