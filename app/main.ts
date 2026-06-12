@@ -1,4 +1,6 @@
 import { createInterface } from "readline";
+import path from "node:path";
+import { accessSync, constants } from "node:fs";
 
 const rl = createInterface({
   input: process.stdin,
@@ -6,34 +8,48 @@ const rl = createInterface({
   prompt: "$ ",
 });
 
-// TODO: Uncomment the code below to pass the first stage
+const BUILTINS = new Set(["exit", "echo", "type"]);
+
 rl.prompt();
-rl.on("line", (command: string) => {
-  switch (command.trim().split(" ")[0]) {
+
+rl.on("line", (line: string) => {
+  const [command, ...args] = line.trim().split(" ");
+
+  switch (command) {
     case "exit":
       return rl.close();
-    case "echo":
-      const removeEcho = command.split(" ");
-      removeEcho.shift();
-      console.log(removeEcho.join(" "));
-      break;
-    case "type":
-      const removeType = command.split(" ");
-      removeType.shift();
 
-      if (
-        removeType.join(" ") !== "exit" &&
-        removeType.join(" ") !== "echo" &&
-        removeType.join(" ") !== "type"
-      ) {
-        console.log(`${removeType.join(" ")}: not found`);
+    case "echo":
+      console.log(args.join(" "));
+      break;
+
+    case "type": {
+      let found = false;
+      const target = args.join(" ");
+      if (BUILTINS.has(target)) {
+        console.log(`${target} is a shell builtin`);
         break;
       }
 
-      console.log(`${removeType.join(" ")} is a shell builtin`);
+      const directories = process.env.PATH.split(path.delimiter);
+      for (const dir of directories) {
+        try {
+          accessSync(path.join(dir, target), constants.X_OK);
+          console.log(`${target} is ${path.join(dir, target)}`);
+          found = !found;
+          break;
+        } catch (err) {
+          continue;
+        }
+      }
+      if (!found) console.error(`${target}: not found`);
+
       break;
+    }
+
     default:
-      console.log(`${command}: command not found`);
+      console.log(`${line}: command not found`);
   }
+
   rl.prompt();
 });
