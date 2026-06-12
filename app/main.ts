@@ -1,6 +1,7 @@
 import { createInterface } from "readline";
 import path from "node:path";
 import { accessSync, constants } from "node:fs";
+import { spawnSync } from "node:child_process";
 
 const rl = createInterface({
   input: process.stdin,
@@ -47,8 +48,21 @@ rl.on("line", (line: string) => {
       break;
     }
 
-    default:
-      console.log(`${line}: command not found`);
+    default: {
+      let executeProgram = false;
+      const directories = process.env.PATH.split(path.delimiter);
+      for (const dir of directories) {
+        try {
+          accessSync(path.join(dir, command), constants.X_OK);
+          executeProgram = true;
+          spawnSync(command, args, { studio: "inherit" });
+          break;
+        } catch (err) {
+          continue;
+        }
+      }
+      if (!executeProgram) console.log(`${line}: command not found`);
+    }
   }
 
   rl.prompt();
