@@ -20,7 +20,7 @@ rl.on("line", (command: string) => {
     case "type":
       const removeType = command.split(" ");
       removeType.shift();
-      console.log(removeType.join(" "));
+
       if (
         removeType.join(" ") !== "exit" &&
         removeType.join(" ") !== "echo" &&
