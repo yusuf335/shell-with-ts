@@ -17,6 +17,11 @@ rl.on("line", (command: string) => {
       removeEcho.shift();
       console.log(removeEcho.join(" "));
       break;
+    case "type":
+      const removeType = command.split(" ");
+      removeType.shift();
+      console.log(`${removeType.join(" ")} is a shell builtin`);
+      break;
     default:
       console.log(`${command}: command not found`);
   }
