@@ -47,22 +47,22 @@ rl.on("line", (line: string) => {
 
       break;
     }
-    case "$": {
+
+    default: {
+      let executeProgram = false;
       const directories = process.env.PATH.split(path.delimiter);
       for (const dir of directories) {
         try {
-          accessSync(path.join(dir, args[0]), constants.X_OK);
-          spawnSync(command, args.shift(), { studio: "inherit" });
+          accessSync(path.join(dir, command), constants.X_OK);
+          executeProgram = true;
+          spawnSync(command, args, { stdio: "inherit" });
           break;
         } catch (err) {
           continue;
         }
       }
-      break;
+      if (!executeProgram) console.log(`${line}: command not found`);
     }
-
-    default:
-      console.log(`${line}: command not found`);
   }
 
   rl.prompt();
