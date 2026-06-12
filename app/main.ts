@@ -36,7 +36,7 @@ rl.on("line", (line: string) => {
         try {
           accessSync(path.join(dir, target), constants.X_OK);
           console.log(`${target} is ${path.join(dir, target)}`);
-          found = !found;
+          found = true;
           break;
         } catch (err) {
           continue;
