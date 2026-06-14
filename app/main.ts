@@ -9,7 +9,7 @@ const rl = createInterface({
   prompt: "$ ",
 });
 
-const BUILTINS = new Set(["exit", "echo", "type"]);
+const BUILTINS = new Set(["exit", "echo", "type", "pwd"]);
 
 rl.prompt();
 
