@@ -55,6 +55,10 @@ rl.on("line", (line: string) => {
 
     case "cd":
       try {
+        if (args[0] === "~") {
+          chdir(process.env.HOME);
+          break;
+        }
         chdir(args[0]);
       } catch {
         console.error(`${args}: No such file or directory`);
