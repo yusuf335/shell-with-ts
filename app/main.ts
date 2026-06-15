@@ -2,7 +2,7 @@ import { createInterface } from "readline";
 import path from "node:path";
 import { accessSync, constants } from "node:fs";
 import { spawnSync } from "node:child_process";
-import { cwd } from "node:process";
+import { chdir, cwd } from "node:process";
 
 const rl = createInterface({
   input: process.stdin,
@@ -51,6 +51,14 @@ rl.on("line", (line: string) => {
 
     case "pwd":
       console.log(cwd());
+      break;
+
+    case "cd":
+      try {
+        chdir(args[0]);
+      } catch {
+        console.error(`${args}: No such file or directory`);
+      }
       break;
 
     default: {
